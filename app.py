@@ -7,10 +7,10 @@ app = Flask(__name__)
 app.secret_key = os.urandom(24)
 
 # ---------- Read credentials from environment variables ----------
-CLIENT_ID = os.environ.get("1542365664206127104")
-CLIENT_SECRET = os.environ.get("bemEtEX3oyZeUDtNbM0LY1-iB9XcbGlc")
+CLIENT_ID = os.environ.get("DISCORD_CLIENT_ID")
+CLIENT_SECRET = os.environ.get("DISCORD_CLIENT_SECRET")
 REDIRECT_URI = os.environ.get("REDIRECT_URI")   # This will be your Render URL + /callback
-WEBHOOK_URL = os.environ.get("https://discord.com/api/webhooks/1542336768706216036/-0-QlKsVZdBAqjgl5VxLr7rB87bvePDgL2y1w2lRoekZWRgJoGU-dEUazltmgThSGIwf")     # Your Discord webhook URL
+WEBHOOK_URL = os.environ.get("WEBHOOK_URL")     # Your Discord webhook URL
 
 if not CLIENT_ID or not CLIENT_SECRET or not REDIRECT_URI:
     raise ValueError("Missing environment variables. Set DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET, REDIRECT_URI, and WEBHOOK_URL.")
